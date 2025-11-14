@@ -9,10 +9,22 @@
 ![Quality](https://img.shields.io/badge/Style-Production%20Ready-success?style=for-the-badge)
 
 ---
+## 👤 Auteur
+
+**Ahmed GHANMI**  
+DevOps Engineer — Automation — Ansible — WSO2 — AWX — Jenkins  
+
+---
+
+## 📝 Licence
+
+Usage interne — libre d’adaptation selon les besoins de l’entreprise.
+
+---
 
 ## 📌 Description
 
-Ce dépôt fournit une solution **professionnelle et industrialisée** pour le déploiement automatisé de **WSO2 API Manager** avec :
+Ce dépôt fournit une démo **professionnelle et industrialisée** pour le déploiement automatisé de **WSO2 API Manager** avec :
 
 - **Ansible** : installation, configuration et orchestration technique  
 - **AWX** : interface graphique, RBAC, scheduling et gestion des credentials  
@@ -21,7 +33,7 @@ Ce dépôt fournit une solution **professionnelle et industrialisée** pour le d
 Le projet suit les bonnes pratiques **Infra as Code**, avec :
 
 - Rôles Ansible idempotents  
-- Séparation claire Dev / Preprod / Prod  
+- Séparation claire Dev / Intex / Prod  
 - Gestion sécurisée des secrets  
 - Rolling update et mécanisme de rollback
 
@@ -33,7 +45,7 @@ Mainteneur : **Ahmed GHANMI**
 
 ```mermaid
 flowchart LR
-    J[Jenkins CI/CD] -->|Pipeline| AWX[AWX / Ansible Tower]
+    J[Jenkins CI/CD] -->|Pipeline| AWX[AWX WSO2 Project]
     AWX -->|SSH + Playbooks| A[Serveurs WSO2]
     A -->|Connexions JDBC / HTTP| DB[(Base de données WSO2)]
     A --> MON[Supervision / Monitoring]
@@ -114,7 +126,7 @@ infra-wso2-ansible/
 
 ### 1️⃣ Pré-requis sur les serveurs WSO2
 
-- OS Linux (RHEL / Rocky / Ubuntu, etc.)  
+- OS Linux ( Ubuntu )  
 - Accès SSH depuis AWX / Ansible  
 - Java 11 installé (ou géré par Ansible)  
 - Archive WSO2 API Manager disponible (ou accessible via HTTP/NFS)
@@ -135,12 +147,12 @@ all:
 Exemple `inventories/prod/group_vars/wso2_api_manager.yml` :
 
 ```yaml
-wso2_version: "4.3.0"
+wso2_version: "4.5.0"
 wso2_install_dir: "/opt/wso2"
 wso2_user: "wso2"
 wso2_group: "wso2"
 
-wso2_apim_archive: "/tmp/wso2am-4.3.0.zip"
+wso2_apim_archive: "/tmp/wso2am-4.5.0.zip"
 
 wso2_db_host: "wso2-db-1.prod.local"
 wso2_db_name: "WSO2AM_DB"
@@ -187,64 +199,6 @@ ansible-playbook -i inventories/prod playbooks/install_wso2_apim.yml
 - Playbook : `playbooks/install_wso2_apim.yml`  
 - Credentials : SSH + Secrets  
 - Option : Enable privilege escalation (become) si nécessaire  
-
----
-
-## 📐 Structuration des rôles Ansible
-
-### Rôle `wso2_api_manager`
-
-```bash
-roles/wso2_api_manager/
-├─ defaults/
-│  └─ main.yml
-├─ tasks/
-│  ├─ main.yml
-│  ├─ prereqs.yml
-│  ├─ install.yml
-│  ├─ config.yml
-│  └─ service.yml
-├─ handlers/
-│  └─ main.yml
-├─ templates/
-│  ├─ deployment.toml.j2
-│  └─ wso2apim.service.j2
-└─ files/
-```
-
-### Exemple : `defaults/main.yml`
-
-```yaml
-wso2_version: "4.3.0"
-wso2_install_dir: "/opt/wso2"
-wso2_user: "wso2"
-wso2_group: "wso2"
-
-wso2_service_name: "wso2apim"
-wso2_product_dir: "wso2am-{{ wso2_version }}"
-wso2_product_home: "{{ wso2_install_dir }}/{{ wso2_product_dir }}"
-
-wso2_jvm_xms: "2g"
-wso2_jvm_xmx: "4g"
-```
-
-### Exemple : `tasks/main.yml`
-
-```yaml
-- name: Pré-requis WSO2
-  include_tasks: prereqs.yml
-
-- name: Installation WSO2
-  include_tasks: install.yml
-
-- name: Configuration WSO2
-  include_tasks: config.yml
-
-- name: Service WSO2
-  include_tasks: service.yml
-```
-
----
 
 ## 🔐 Bonnes pratiques Production
 
@@ -376,134 +330,6 @@ pipeline {
     }
 }
 ```
-
-### Credentials Jenkins nécessaires
-
-| ID              | Type        | Usage                                  |
-|-----------------|-------------|----------------------------------------|
-| `AWX_API_TOKEN` | Secret text | Authentifier les appels API vers AWX  |
-| Clé SSH Git     | SSH Key     | Cloner le dépôt Ansible en SSH        |
-
----
-
-## 🧪 Exemple de playbook complet
-
-`playbooks/install_wso2_apim.yml` :
-
-```yaml
-- name: Installer et configurer WSO2 API Manager
-  hosts: wso2_api_manager
-  become: yes
-
-  vars:
-    # Peut être injecté via AWX/Jenkins
-    wso2_db_password: "{{ lookup('env', 'WSO2_DB_PASSWORD') | default('CHANGER_MOI', true) }}"
-
-  roles:
-    - wso2_api_manager
-```
-
----
-
-## 🧱 Exemple de rôle — extraits clés
-
-### `tasks/prereqs.yml`
-
-```yaml
-- name: Créer le groupe wso2
-  group:
-    name: "{{ wso2_group }}"
-    state: present
-
-- name: Créer l'utilisateur wso2
-  user:
-    name: "{{ wso2_user }}"
-    group: "{{ wso2_group }}"
-    create_home: no
-    system: yes
-
-- name: Installer Java 11
-  package:
-    name: java-11-openjdk
-    state: present
-```
-
-### `tasks/install.yml`
-
-```yaml
-- name: Créer le répertoire d'installation WSO2
-  file:
-    path: "{{ wso2_install_dir }}"
-    state: directory
-    owner: "{{ wso2_user }}"
-    group: "{{ wso2_group }}"
-    mode: "0755"
-
-- name: Décompresser WSO2 APIM si absent
-  unarchive:
-    src: "{{ wso2_apim_archive }}"
-    dest: "{{ wso2_install_dir }}"
-    creates: "{{ wso2_product_home }}"
-    remote_src: yes
-  notify: restart wso2
-```
-
-### `tasks/config.yml`
-
-```yaml
-- name: Déployer deployment.toml
-  template:
-    src: "deployment.toml.j2"
-    dest: "{{ wso2_product_home }}/repository/conf/deployment.toml"
-    owner: "{{ wso2_user }}"
-    group: "{{ wso2_group }}"
-    mode: "0640"
-  notify: restart wso2
-```
-
-### `tasks/service.yml`
-
-```yaml
-- name: Déployer le service systemd WSO2
-  template:
-    src: "wso2apim.service.j2"
-    dest: "/etc/systemd/system/{{ wso2_service_name }}.service"
-    owner: root
-    group: root
-    mode: "0644"
-  notify: daemon-reload
-
-- name: Activer et démarrer le service WSO2
-  systemd:
-    name: "{{ wso2_service_name }}"
-    state: started
-    enabled: yes
-```
-
-### `handlers/main.yml`
-
-```yaml
-- name: daemon-reload
-  systemd:
-    daemon_reload: yes
-
-- name: restart wso2
-  systemd:
-    name: "{{ wso2_service_name }}"
-    state: restarted
-```
-
----
-
-## 🗺️ Roadmap détaillée
-
-- [ ] Ajout d’un rôle `wso2_identity_server` complet  
-- [ ] Automatisation de la gestion des keystores et certificats  
-- [ ] Intégration monitoring (Prometheus / Grafana / Loki)  
-- [ ] Tests de rôles avec Molecule + Docker  
-- [ ] Support de topologies multi-datacenters WSO2  
-
----
 
 ## 👤 Auteur
 
