@@ -1,0 +1,18 @@
+wso2_version: "4.3.0"
+wso2_install_dir: "/opt/wso2"
+wso2_user: "wso2"
+wso2_group: "wso2"
+
+# Archive WSO2 (déjà copiée sur les serveurs ou montée depuis un share interne)
+wso2_apim_archive: "/tmp/wso2am-{{ wso2_version }}.zip"
+
+# JVM
+wso2_jvm_xms: "4g"
+wso2_jvm_xmx: "4g"
+
+# DB – l’idéal est que le mot de passe vienne d’un Credential AWX
+wso2_db_host: "wso2-db-1.prod.local"
+wso2_db_name: "WSO2AM_DB"
+wso2_db_user: "wso2am"
+# wso2_db_password viendra d’AWX (extra_vars ou env var)
+

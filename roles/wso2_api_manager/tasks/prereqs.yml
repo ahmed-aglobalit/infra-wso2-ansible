@@ -1,0 +1,17 @@
+- name: Ensure wso2 group exists
+  group:
+    name: "{{ wso2_group }}"
+    state: present
+
+- name: Ensure wso2 user exists
+  user:
+    name: "{{ wso2_user }}"
+    group: "{{ wso2_group }}"
+    create_home: no
+    system: yes
+
+- name: Ensure Java is installed (exemple pour RHEL-like)
+  package:
+    name: java-11-openjdk
+    state: present
+

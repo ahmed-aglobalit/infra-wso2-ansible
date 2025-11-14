@@ -1,0 +1,9 @@
+- name: daemon-reload
+  systemd:
+    daemon_reload: yes
+
+- name: restart wso2apim
+  systemd:
+    name: "{{ wso2_service_name }}"
+    state: restarted
+

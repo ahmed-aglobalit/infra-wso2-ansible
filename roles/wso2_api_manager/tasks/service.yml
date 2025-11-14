@@ -1,0 +1,15 @@
+- name: Deploy systemd service
+  template:
+    src: "wso2apim.service.j2"
+    dest: "/etc/systemd/system/{{ wso2_service_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: daemon-reload
+
+- name: Ensure WSO2 service is enabled and started
+  systemd:
+    name: "{{ wso2_service_name }}"
+    state: started
+    enabled: yes
+

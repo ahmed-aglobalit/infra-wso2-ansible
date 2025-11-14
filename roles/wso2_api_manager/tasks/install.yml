@@ -1,0 +1,16 @@
+- name: Ensure WSO2 base directory exists
+  file:
+    path: "{{ wso2_install_dir }}"
+    state: directory
+    owner: "{{ wso2_user }}"
+    group: "{{ wso2_group }}"
+    mode: "0755"
+
+- name: Unarchive WSO2 APIM if not already present
+  unarchive:
+    src: "{{ wso2_apim_archive }}"
+    dest: "{{ wso2_install_dir }}"
+    creates: "{{ wso2_product_home }}"
+    remote_src: yes
+  notify: restart wso2apim
+

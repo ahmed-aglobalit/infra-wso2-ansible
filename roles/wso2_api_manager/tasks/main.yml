@@ -1,0 +1,12 @@
+- name: Include prerequisites
+  include_tasks: prereqs.yml
+
+- name: Include installation
+  include_tasks: install.yml
+
+- name: Include configuration
+  include_tasks: config.yml
+
+- name: Include service configuration
+  include_tasks: service.yml
+

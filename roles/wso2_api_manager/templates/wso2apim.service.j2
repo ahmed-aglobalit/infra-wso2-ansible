@@ -1,0 +1,17 @@
+[Unit]
+Description=WSO2 API Manager
+After=network.target
+
+[Service]
+Type=simple
+User={{ wso2_user }}
+Group={{ wso2_group }}
+WorkingDirectory={{ wso2_product_home }}/bin
+ExecStart={{ wso2_product_home }}/bin/api-manager.sh
+Restart=on-failure
+Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk"
+Environment="JVM_MEM_OPTS=-Xms{{ wso2_jvm_xms }} -Xmx{{ wso2_jvm_xmx }}"
+
+[Install]
+WantedBy=multi-user.target
+

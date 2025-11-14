@@ -1,0 +1,9 @@
+- name: Deploy deployment.toml
+  template:
+    src: "deployment.toml.j2"
+    dest: "{{ wso2_product_home }}/repository/conf/deployment.toml"
+    owner: "{{ wso2_user }}"
+    group: "{{ wso2_group }}"
+    mode: "0640"
+  notify: restart wso2apim
+

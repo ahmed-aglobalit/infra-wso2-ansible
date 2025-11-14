@@ -1,0 +1,11 @@
+wso2_version: "4.3.0"
+wso2_install_dir: "/opt/wso2"
+wso2_user: "wso2"
+wso2_group: "wso2"
+
+wso2_jvm_xms: "2g"
+wso2_jvm_xmx: "2g"
+
+wso2_service_name: "wso2apim"
+wso2_product_dir: "wso2am-{{ wso2_version }}"
+wso2_product_home: "{{ wso2_install_dir }}/{{ wso2_product_dir }}"

@@ -1,0 +1,24 @@
+[server]
+hostname = "{{ inventory_hostname }}"
+node_ip = "{{ ansible_default_ipv4.address }}"
+server_role = "default"
+
+[super_admin]
+username = "admin"
+password = "admin"
+create_admin_account = true
+
+[database.shared_db]
+type = "mysql"
+hostname = "{{ wso2_db_host }}"
+name = "{{ wso2_db_name }}"
+username = "{{ wso2_db_user }}"
+password = "{{ wso2_db_password }}"
+
+[database.apim_db]
+type = "mysql"
+hostname = "{{ wso2_db_host }}"
+name = "{{ wso2_db_name }}"
+username = "{{ wso2_db_user }}"
+password = "{{ wso2_db_password }}"
+
