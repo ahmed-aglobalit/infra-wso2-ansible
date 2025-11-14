@@ -1,15 +1,21 @@
-- name: Deploy systemd service
-  template:
+# roles/wso2_api_manager/tasks/service.yml
+---
+- name: Déployer le service systemd WSO2 API Manager
+  ansible.builtin.template:
     src: "wso2apim.service.j2"
     dest: "/etc/systemd/system/{{ wso2_service_name }}.service"
     owner: root
     group: root
-    mode: "0644"
-  notify: daemon-reload
+    mode: '0644'
+  notify: restart wso2 api manager
 
-- name: Ensure WSO2 service is enabled and started
-  systemd:
+- name: Recharger systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Activer et démarrer le service WSO2 API Manager
+  ansible.builtin.systemd:
     name: "{{ wso2_service_name }}"
-    state: started
     enabled: yes
+    state: started
 

@@ -1,18 +1,20 @@
-wso2_version: "4.3.0"
-wso2_install_dir: "/opt/wso2"
-wso2_user: "wso2"
-wso2_group: "wso2"
+# inventories/prod/group_vars/wso2_api_manager.yml
+wso2_version: "4.2.0"
+wso2_user: wso2
+wso2_group: wso2
+wso2_base_dir: /opt
+wso2_home: "{{ wso2_base_dir }}/wso2am-{{ wso2_version }}"
+wso2_service_name: wso2apim
+wso2_download_url: "https://github.com/wso2/product-apim/releases/download/v{{ wso2_version }}/wso2am-{{ wso2_version }}.zip"
 
-# Archive WSO2 (déjà copiée sur les serveurs ou montée depuis un share interne)
-wso2_apim_archive: "/tmp/wso2am-{{ wso2_version }}.zip"
+# Ports / config basique
+wso2_https_port: 9443
 
-# JVM
-wso2_jvm_xms: "4g"
-wso2_jvm_xmx: "4g"
-
-# DB – l’idéal est que le mot de passe vienne d’un Credential AWX
-wso2_db_host: "wso2-db-1.prod.local"
-wso2_db_name: "WSO2AM_DB"
-wso2_db_user: "wso2am"
-# wso2_db_password viendra d’AWX (extra_vars ou env var)
+# Exemple DB (à adapter, mettre les secrets dans Vault en vrai)
+wso2_db_type: "postgres"
+wso2_db_host: "db-prod.example.com"
+wso2_db_port: 5432
+wso2_db_name: "wso2apim"
+wso2_db_user: "wso2apim"
+wso2_db_password: "CHANGE_ME_IN_VAULT"
 

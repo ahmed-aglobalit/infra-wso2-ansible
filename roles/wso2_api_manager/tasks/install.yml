@@ -1,16 +1,38 @@
-- name: Ensure WSO2 base directory exists
-  file:
-    path: "{{ wso2_install_dir }}"
+# roles/wso2_api_manager/tasks/install.yml
+---
+- name: Télécharger l'archive WSO2 API Manager
+  ansible.builtin.get_url:
+    url: "{{ wso2_download_url }}"
+    dest: "/tmp/wso2am-{{ wso2_version }}.zip"
+    mode: '0644'
+  register: wso2_download
+  tags:
+    - download
+
+- name: Créer le répertoire d'installation WSO2
+  ansible.builtin.file:
+    path: "{{ wso2_home }}"
     state: directory
     owner: "{{ wso2_user }}"
     group: "{{ wso2_group }}"
-    mode: "0755"
+    mode: '0755'
 
-- name: Unarchive WSO2 APIM if not already present
-  unarchive:
-    src: "{{ wso2_apim_archive }}"
-    dest: "{{ wso2_install_dir }}"
-    creates: "{{ wso2_product_home }}"
+- name: Décompresser WSO2 API Manager
+  ansible.builtin.unarchive:
+    src: "/tmp/wso2am-{{ wso2_version }}.zip"
+    dest: "{{ wso2_base_dir }}"
     remote_src: yes
-  notify: restart wso2apim
+    owner: "{{ wso2_user }}"
+    group: "{{ wso2_group }}"
+    creates: "{{ wso2_home }}/bin"
+  tags:
+    - install
+
+- name: S'assurer des permissions sur le répertoire WSO2
+  ansible.builtin.file:
+    path: "{{ wso2_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{ wso2_user }}"
+    group: "{{ wso2_group }}"
 

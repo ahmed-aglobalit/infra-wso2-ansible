@@ -1,9 +1,9 @@
-- name: daemon-reload
-  systemd:
-    daemon_reload: yes
-
-- name: restart wso2apim
-  systemd:
+# roles/wso2_api_manager/handlers/main.yml
+---
+- name: restart wso2 api manager
+  ansible.builtin.systemd:
     name: "{{ wso2_service_name }}"
     state: restarted
+    enabled: yes
+    daemon_reload: yes
 

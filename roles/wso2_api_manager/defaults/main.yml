@@ -1,11 +1,24 @@
-wso2_version: "4.3.0"
-wso2_install_dir: "/opt/wso2"
-wso2_user: "wso2"
-wso2_group: "wso2"
+# roles/wso2_api_manager/defaults/main.yml
+---
+wso2_version: "4.2.0"
+wso2_user: wso2
+wso2_group: wso2
+wso2_base_dir: /opt
+wso2_home: "{{ wso2_base_dir }}/wso2am-{{ wso2_version }}"
+wso2_service_name: wso2apim
 
-wso2_jvm_xms: "2g"
-wso2_jvm_xmx: "2g"
+wso2_download_url: "https://github.com/wso2/product-apim/releases/download/v{{ wso2_version }}/wso2am-{{ wso2_version }}.zip"
 
-wso2_service_name: "wso2apim"
-wso2_product_dir: "wso2am-{{ wso2_version }}"
-wso2_product_home: "{{ wso2_install_dir }}/{{ wso2_product_dir }}"
+wso2_java_package: "openjdk-11-jdk"
+
+# Ports simples (exemple)
+wso2_https_port: 9443
+
+# DB générique
+wso2_db_type: "postgres"
+wso2_db_host: "localhost"
+wso2_db_port: 5432
+wso2_db_name: "wso2apim"
+wso2_db_user: "wso2apim"
+wso2_db_password: "CHANGE_ME"
+

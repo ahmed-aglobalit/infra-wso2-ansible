@@ -1,16 +1,17 @@
+# roles/wso2_api_manager/templates/wso2apim.service.j2
 [Unit]
-Description=WSO2 API Manager
+Description=WSO2 API Manager {{ wso2_version }}
 After=network.target
 
 [Service]
 Type=simple
 User={{ wso2_user }}
 Group={{ wso2_group }}
-WorkingDirectory={{ wso2_product_home }}/bin
-ExecStart={{ wso2_product_home }}/bin/api-manager.sh
+WorkingDirectory={{ wso2_home }}
+ExecStart={{ wso2_home }}/bin/api-manager.sh start
+ExecStop={{ wso2_home }}/bin/api-manager.sh stop
 Restart=on-failure
-Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk"
-Environment="JVM_MEM_OPTS=-Xms{{ wso2_jvm_xms }} -Xmx{{ wso2_jvm_xmx }}"
+LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target

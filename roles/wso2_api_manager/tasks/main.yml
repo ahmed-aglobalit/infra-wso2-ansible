@@ -1,12 +1,26 @@
-- name: Include prerequisites
-  include_tasks: prereqs.yml
+# roles/wso2_api_manager/tasks/main.yml
+---
+- name: Pré-requis système pour WSO2 API Manager
+  ansible.builtin.import_tasks: prereqs.yml
+  tags:
+    - wso2
+    - prereqs
 
-- name: Include installation
-  include_tasks: install.yml
+- name: Installer WSO2 API Manager
+  ansible.builtin.import_tasks: install.yml
+  tags:
+    - wso2
+    - install
 
-- name: Include configuration
-  include_tasks: config.yml
+- name: Configurer WSO2 API Manager
+  ansible.builtin.import_tasks: config.yml
+  tags:
+    - wso2
+    - config
 
-- name: Include service configuration
-  include_tasks: service.yml
+- name: Gérer le service WSO2 API Manager
+  ansible.builtin.import_tasks: service.yml
+  tags:
+    - wso2
+    - service
 

@@ -1,9 +1,12 @@
-- name: Install and configure WSO2 API Manager
+# playbooks/install_wso2_apim.yml
+---
+- name: Installer et configurer WSO2 API Manager
   hosts: wso2_api_manager
   become: yes
-  vars:
-    # Par exemple, on peut récupérer le mdp depuis une variable AWX
-    wso2_db_password: "{{ lookup('env', 'WSO2_DB_PASSWORD') | default('CHANGER_MOI', true) }}"
+  gather_facts: yes
+
   roles:
-    - wso2_api_manager
+    - role: wso2_api_manager
+      tags:
+        - wso2
 

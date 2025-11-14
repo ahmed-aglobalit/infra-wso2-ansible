@@ -1,17 +1,31 @@
-- name: Ensure wso2 group exists
-  group:
+# roles/wso2_api_manager/tasks/prereqs.yml
+---
+- name: Installer les paquets nécessaires
+  ansible.builtin.package:
+    name:
+      - unzip
+      - wget
+      - "{{ wso2_java_package }}"
+    state: present
+
+- name: Créer le groupe WSO2
+  ansible.builtin.group:
     name: "{{ wso2_group }}"
     state: present
 
-- name: Ensure wso2 user exists
-  user:
+- name: Créer l'utilisateur WSO2
+  ansible.builtin.user:
     name: "{{ wso2_user }}"
     group: "{{ wso2_group }}"
-    create_home: no
-    system: yes
-
-- name: Ensure Java is installed (exemple pour RHEL-like)
-  package:
-    name: java-11-openjdk
+    create_home: yes
+    shell: /bin/bash
     state: present
+
+- name: Créer le répertoire de base WSO2
+  ansible.builtin.file:
+    path: "{{ wso2_base_dir }}"
+    state: directory
+    owner: "{{ wso2_user }}"
+    group: "{{ wso2_group }}"
+    mode: '0755'
 

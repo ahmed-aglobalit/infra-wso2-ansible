@@ -1,24 +1,21 @@
-[server]
-hostname = "{{ inventory_hostname }}"
-node_ip = "{{ ansible_default_ipv4.address }}"
-server_role = "default"
+# roles/wso2_api_manager/templates/deployment.toml.j2
 
-[super_admin]
-username = "admin"
-password = "admin"
-create_admin_account = true
+[server]
+hostname = "localhost"
+node_ip = "127.0.0.1"
+
+[transport.https]
+port = {{ wso2_https_port }}
 
 [database.shared_db]
-type = "mysql"
-hostname = "{{ wso2_db_host }}"
-name = "{{ wso2_db_name }}"
+type = "{{ wso2_db_type }}"
+url = "jdbc:postgresql://{{ wso2_db_host }}:{{ wso2_db_port }}/{{ wso2_db_name }}"
 username = "{{ wso2_db_user }}"
 password = "{{ wso2_db_password }}"
 
 [database.apim_db]
-type = "mysql"
-hostname = "{{ wso2_db_host }}"
-name = "{{ wso2_db_name }}"
+type = "{{ wso2_db_type }}"
+url = "jdbc:postgresql://{{ wso2_db_host }}:{{ wso2_db_port }}/{{ wso2_db_name }}"
 username = "{{ wso2_db_user }}"
 password = "{{ wso2_db_password }}"
 
