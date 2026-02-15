@@ -9,7 +9,7 @@ wso2_service_name: wso2apim
 
 wso2_download_url: "https://github.com/wso2/product-apim/releases/download/v{{ wso2_version }}/wso2am-{{ wso2_version }}.zip"
 
-wso2_java_package: "openjdk-11-jdk"
+wso2_java_package: "java-11-openjdk"
 
 # Ports simples (exemple)
 wso2_https_port: 9443
