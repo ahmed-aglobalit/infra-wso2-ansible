@@ -1,0 +1,35 @@
+# playbooks/check_wso2.yml
+---
+- name: Vérifier l'installation WSO2 API Manager
+  hosts: wso2_api_manager
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Vérifier que Java est installé
+      ansible.builtin.command: java -version
+      register: java_version
+      changed_when: false
+
+    - name: Afficher la version Java
+      ansible.builtin.debug:
+        msg: "{{ java_version.stderr_lines }}"
+
+    - name: Vérifier que le dossier WSO2 existe
+      ansible.builtin.stat:
+        path: /opt/wso2am-4.6.0
+      register: wso2_dir
+
+    - name: Résultat vérification WSO2
+      ansible.builtin.debug:
+        msg: "WSO2 directory exists: {{ wso2_dir.stat.exists }}"
+
+    - name: Vérifier que le service WSO2 est actif
+      ansible.builtin.systemd:
+        name: wso2apim
+      register: wso2_service
+      ignore_errors: yes
+
+    - name: Résultat service WSO2
+      ansible.builtin.debug:
+        msg: "WSO2 service status: {{ wso2_service.status.ActiveState | default('not found') }}"
