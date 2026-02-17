@@ -1,0 +1,31 @@
+# playbooks/manage_apis.yml
+---
+- name: Gérer les APIs WSO2 via la collection ahmedlab.wso2
+  hosts: wso2_api_manager
+  gather_facts: no
+  collections:
+    - ahmedlab.wso2
+
+  vars:
+    wso2_host: "https://{{ ansible_host }}:9443"
+    wso2_user: "admin"
+    wso2_password: "admin"
+
+  tasks:
+    - name: Créer l'API PetStore
+      ahmedlab.wso2.wso2_api:
+        name: "PetStore"
+        version: "1.0"
+        context: "/petstore"
+        endpoint: "https://petstore.swagger.io/v2"
+        description: "API de démonstration PetStore"
+        publish: true
+        wso2_host: "{{ wso2_host }}"
+        wso2_user: "{{ wso2_user }}"
+        wso2_password: "{{ wso2_password }}"
+        state: present
+      register: petstore_result
+
+    - name: Résultat PetStore
+      ansible.builtin.debug:
+        msg: "{{ petstore_result.message }}"
